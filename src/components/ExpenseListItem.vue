@@ -5,6 +5,7 @@
     @dblclick="onDblClick"
     @click="onClick"
   >
+    <BiChevronsDown :class="'chevron'" v-if="hasChildren(expense.id)" />
     <img :src="expense.image" alt="Expense Image" v-if="expense.image" class="image" />
     <div :class="[expense.image ? 'name' : 'name-without-image']">{{ expense.name }}</div>
     <div :class="[expense.image ? 'info' : 'info-without-image']">
@@ -19,6 +20,7 @@
 import type { Expense } from "@/model/Expense";
 import { defineProps, toRefs } from "vue";
 import { useExpensesStore } from "@/stores/ExpensesStore";
+import { BiChevronsDown } from "vue-icons-plus/bi";
 
 const props = defineProps<{
   expense: Expense;
@@ -26,10 +28,9 @@ const props = defineProps<{
 }>();
 const { expense, isSelected } = toRefs(props);
 const expensesStore = useExpensesStore();
-const { setSelectedId, setChildrenExpensesByParentId } = expensesStore;
+const { setSelectedId, setChildrenExpensesByParentId, hasChildren } = expensesStore;
 
 const onDblClick = () => {
-  console.log(`Drilling down into expense ID: ${expense.value.id}`);
   setChildrenExpensesByParentId(expense.value.id);
 };
 
@@ -42,12 +43,12 @@ const onClick = () => {
 .item-container {
   display: grid;
   grid-template-rows: 1fr 1fr 2fr 1fr;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2fr 30px;
   grid-template-areas:
-    "image name"
-    "image info"
-    "image empty"
-    "image data";
+    "image name chevron"
+    "image info info"
+    "image empty empty"
+    "image data data";
   column-gap: 5px;
   border-width: 1px;
   border-style: solid;
@@ -98,5 +99,11 @@ const onClick = () => {
   font-size: 0.8em;
   align-self: start;
   margin-left: 5px;
+}
+.chevron {
+  height: 22px;
+  grid-area: chevron;
+  align-self: center;
+  justify-self: center;
 }
 </style>

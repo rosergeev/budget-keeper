@@ -26,11 +26,11 @@ import { ElButton } from "element-plus";
 import { useExpensesStore } from "@/stores/ExpensesStore";
 import { storeToRefs } from "pinia";
 const expensesStore = useExpensesStore();
-const { GoOneLevelUp } = expensesStore;
+const { goOneLevelUp } = expensesStore;
 const { firstChild } = storeToRefs(expensesStore);
 
 const GoUp = () => {
-  GoOneLevelUp();
+  goOneLevelUp();
 };
 
 const GoHome = () => {
