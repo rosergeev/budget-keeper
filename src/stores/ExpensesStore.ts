@@ -40,6 +40,23 @@ export const useExpensesStore = defineStore("ExpensesStore", () => {
     }
   }
 
+  function getSelfAndChildrenIds(id: number | null): number[] {
+    if (id === null) {
+      return [];
+    }
+    const allChildrenIds: number[] = [];
+    getChildrenIdsRecursive(id, allChildrenIds);
+    return allChildrenIds;
+  }
+
+  const getChildrenIdsRecursive = (parentId: number, ids: number[]) => {
+    const children = expensesTreeMap.getChildren(parentId);
+    ids.push(parentId);
+    for (const childId of children) {
+      getChildrenIdsRecursive(childId, ids);
+    }
+  };
+
   function goOneLevelUp() {
     const firstItemParentId = firstChild.value?.parentId;
     if (firstItemParentId !== undefined) {
@@ -65,5 +82,6 @@ export const useExpensesStore = defineStore("ExpensesStore", () => {
     setSelectedId,
     goOneLevelUp,
     hasChildren,
+    getSelfAndChildrenIds
   };
 });

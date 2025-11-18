@@ -33,6 +33,23 @@ export const useExpensesDataStore = defineStore("ExpensesDataStore", () => {
     return found ? found : null;
   }
 
+  function getMonthSumById(ids: number[]): number {
+    const firstDateOfMonth = moment().startOf("month");
+    let sum = 0;
+    for (const id of ids) {
+      const datas = map.get(id);
+      if (datas) {
+        const filteredData = datas.filter((d) => {
+          const date = moment(d.date);
+          return date.isSameOrAfter(firstDateOfMonth);
+        });
+        sum += filteredData.reduce((acc, d) => acc + d.cost, 0);
+      }
+    }
+
+    return sum;
+  }
+
   const buildMap = () => {
     map.clear();
     for (const d of allData.value) {
@@ -48,5 +65,6 @@ export const useExpensesDataStore = defineStore("ExpensesDataStore", () => {
     init,
     getDataById,
     findDataByDate,
+    getMonthSumById,
   };
 });

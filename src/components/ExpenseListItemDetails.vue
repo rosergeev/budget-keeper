@@ -29,8 +29,9 @@ import moment from "moment";
 
 const expensesStore = useExpensesStore();
 const { selectedId, childrenExpenses } = storeToRefs(expensesStore);
+const { getSelfAndChildrenIds } = expensesStore;
 const expensesDataStore = useExpensesDataStore();
-const { getDataById, findDataByDate } = expensesDataStore;
+const { getDataById, findDataByDate, getMonthSumById } = expensesDataStore;
 const dateValue = ref(new Date());
 const cost = ref("");
 
@@ -41,10 +42,12 @@ const expenseData = computed(() => {
     if (!expense || !expData) {
       return null;
     }
+    const ids = getSelfAndChildrenIds(selectedId.value);
+    const monthExpense = getMonthSumById(ids);
     return {
       name: expense.name,
       description: expense.description,
-      cost: expData.reduce((sum, item) => sum + item.cost, 0),
+      cost: monthExpense,
     };
   }
   return null;
@@ -64,7 +67,6 @@ const onDateChange = (value: string) => {
   } else {
     cost.value = "";
   }
-  console.log("Date changed:", date);
 };
 
 const onCostKeyDown = (event: KeyboardEvent | Event) => {

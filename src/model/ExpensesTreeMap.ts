@@ -23,4 +23,12 @@ export class ExpensesTreeMap {
   public hasChildren = (id: number | null): boolean => {
     return this.map.has(id);
   };
+
+  public getChildren = (id: number | null): number[] => {
+    const childrenIds = this.map.get(id);
+    if (!childrenIds) {
+      return [];
+    }
+    return Array.from(childrenIds);
+  }
 }
