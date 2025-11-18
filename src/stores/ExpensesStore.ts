@@ -36,6 +36,7 @@ export const useExpensesStore = defineStore("ExpensesStore", () => {
     const children = expenses.value.filter((expense) => expense.parentId === id);
     if (children.length > 0) {
       childrenExpenses.value = children;
+      setSelectedId(null);
     }
   }
 

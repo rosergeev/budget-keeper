@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">Expenses</div>
     <ExpenseNavBar class="nav" />
-    <div class="list">
+    <div class="list" @click="onClick">
       <ExpenseList :items="childrenExpenses" />
     </div>
     <div class="details">
@@ -20,12 +20,17 @@ import { storeToRefs } from "pinia";
 
 const expensesStore = useExpensesStore();
 const { childrenExpenses } = storeToRefs(expensesStore);
+const { setSelectedId } = expensesStore;
+
+const onClick = () => {
+  setSelectedId(null);
+};
 </script>
 
 <style scoped>
 .container {
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 3fr 400px;
   grid-template-rows: 30px 35px 1fr;
   grid-template-areas:
     "header header"
@@ -53,7 +58,8 @@ const { childrenExpenses } = storeToRefs(expensesStore);
 }
 .details {
   grid-area: details;
-  border-color: rgb(105, 252, 76);
+  border-color: #eee;
+  border-radius: 5px;
   border-style: solid;
   border-width: 1px;
 }

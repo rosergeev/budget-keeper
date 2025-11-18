@@ -34,8 +34,13 @@ const onDblClick = () => {
   setChildrenExpensesByParentId(expense.value.id);
 };
 
-const onClick = () => {
-  setSelectedId(expense.value.id);
+const onClick = (ev: MouseEvent) => {
+  if (isSelected.value) {
+    setSelectedId(null);
+  } else {
+    setSelectedId(expense.value.id);
+  }
+  ev.stopPropagation();
 };
 </script>
 
