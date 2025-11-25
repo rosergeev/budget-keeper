@@ -7,25 +7,20 @@ import { ExpensesTreeMap } from "@/model/ExpensesTreeMap";
 export const useExpensesStore = defineStore("ExpensesStore", () => {
   const expenses = ref<Expense[]>([]);
   const selectedId = ref<number | null>(null);
-  const childrenExpenses = ref<Expense[]>([]);
+  const currentParentId = ref<number | null>(null);
   let expensesTreeMap: ExpensesTreeMap = new ExpensesTreeMap([]);
 
-  const firstChild = computed<Expense | null>(() => {
-    return childrenExpenses.value.length > 0 ? childrenExpenses.value[0] ?? null : null;
+  const childrenExpenses = computed<Expense[]>(() => {
+    return expenses.value.filter((expense) => expense.parentId === currentParentId.value);
   });
 
   function init() {
     expenses.value = expensesData.expenses;
     expensesTreeMap = new ExpensesTreeMap(expenses.value);
-    childrenExpenses.value = expenses.value.filter((expense) => expense.parentId === null);
   }
 
   function addExpense(expense: Expense) {
     expenses.value.push(expense);
-  }
-
-  function removeExpense(expense: Expense) {
-    expenses.value = expenses.value.filter((e) => e.id !== expense.id);
   }
 
   function setSelectedId(id: number | null) {
@@ -33,11 +28,8 @@ export const useExpensesStore = defineStore("ExpensesStore", () => {
   }
 
   function setChildrenExpensesByParentId(id: number | null) {
-    const children = expenses.value.filter((expense) => expense.parentId === id);
-    if (children.length > 0) {
-      childrenExpenses.value = children;
-      setSelectedId(null);
-    }
+    currentParentId.value = id;
+    setSelectedId(null);
   }
 
   function getSelfAndChildrenIds(id: number | null): number[] {
@@ -58,12 +50,11 @@ export const useExpensesStore = defineStore("ExpensesStore", () => {
   };
 
   function goOneLevelUp() {
-    const firstItemParentId = firstChild.value?.parentId;
-    if (firstItemParentId !== undefined) {
-      setChildrenExpensesByParentId(
-        expenses.value.find((expense) => expense.id === firstItemParentId)?.parentId ?? null
-      );
+    if (currentParentId.value === null) {
+      return;
     }
+    const parentExpense = expenses.value.find((expense) => expense.id === currentParentId.value);
+    setChildrenExpensesByParentId(parentExpense?.parentId ?? null);
   }
 
   function hasChildren(id: number | null): boolean {
@@ -74,14 +65,13 @@ export const useExpensesStore = defineStore("ExpensesStore", () => {
     expenses,
     childrenExpenses,
     selectedId,
-    firstChild,
+    currentParentId,
     init,
     setChildrenExpensesByParentId,
     addExpense,
-    removeExpense,
     setSelectedId,
     goOneLevelUp,
     hasChildren,
-    getSelfAndChildrenIds
+    getSelfAndChildrenIds,
   };
 });

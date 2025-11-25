@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">Expenses</div>
     <ExpenseNavBar class="nav" />
-    <div class="list" @click="onClick">
+    <div class="list" @click="onListClick">
       <ExpenseList :items="childrenExpenses" />
     </div>
     <div class="details">
@@ -22,7 +22,7 @@ const expensesStore = useExpensesStore();
 const { childrenExpenses } = storeToRefs(expensesStore);
 const { setSelectedId } = expensesStore;
 
-const onClick = () => {
+const onListClick = () => {
   setSelectedId(null);
 };
 </script>
