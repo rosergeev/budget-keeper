@@ -20,6 +20,7 @@
 import type { Expense } from "@/model/Expense";
 import { defineProps, toRefs } from "vue";
 import { useExpensesStore } from "@/stores/ExpensesStore";
+import { useBreadcrumbStore } from "@/stores/BreadcrumbStore";
 import { BiChevronsDown } from "vue-icons-plus/bi";
 
 const props = defineProps<{
@@ -29,9 +30,15 @@ const props = defineProps<{
 const { expense, isSelected } = toRefs(props);
 const expensesStore = useExpensesStore();
 const { setSelectedId, setChildrenExpensesByParentId, hasChildren } = expensesStore;
+const breadcrumbStore = useBreadcrumbStore();
+const { addBreadcrumb } = breadcrumbStore;
 
 const onDblClick = () => {
+  if (!hasChildren(expense.value.id)) {
+    return;
+  }
   setChildrenExpensesByParentId(expense.value.id);
+  addBreadcrumb(expense.value);
 };
 
 const onClick = (ev: MouseEvent) => {

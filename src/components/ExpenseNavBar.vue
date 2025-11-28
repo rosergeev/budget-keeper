@@ -29,12 +29,15 @@ import { BsArrowUp, BsHouseFill } from "vue-icons-plus/bs";
 import { AiOutlinePlus, AiOutlineSisternode } from "vue-icons-plus/ai";
 import { ElButton } from "element-plus";
 import { useExpensesStore } from "@/stores/ExpensesStore";
+import { useBreadcrumbStore } from "@/stores/BreadcrumbStore";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import ExpenseListAddNewItem from "./ExpenseListAddNewItem.vue";
+import ExpenseListAddNewItem from "@/components/ExpenseListAddNewItem.vue";
 
 const expensesStore = useExpensesStore();
-const { goOneLevelUp } = expensesStore;
+const breadcrumbStore = useBreadcrumbStore();
+const { goOneLevelUp, setChildrenExpensesByParentId } = expensesStore;
+const { resetBreadcrumbs, truncateBreadcrumbsTo } = breadcrumbStore;
 const { selectedId, currentParentId } = storeToRefs(expensesStore);
 const isDialogVisible = ref(false);
 const parentId = ref<number | null>(null);
@@ -51,10 +54,12 @@ const addNewChildItem = () => {
 
 const GoUp = () => {
   goOneLevelUp();
+  truncateBreadcrumbsTo(currentParentId.value ?? -1);
 };
 
 const GoHome = () => {
-  expensesStore.setChildrenExpensesByParentId(null);
+  setChildrenExpensesByParentId(null);
+  resetBreadcrumbs();
 };
 </script>
 

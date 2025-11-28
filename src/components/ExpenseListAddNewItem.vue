@@ -87,8 +87,6 @@ const onAddNewItem = async () => {
       const fileBase64 = await fileToBase64();
       const maxId = Math.max(...expenses.value.map((e) => e.id));
       newExpense.value.id = maxId + 1;
-      console.log(`parentId: ${newExpense.value?.parentId}`);
-
       newExpense.value.image = fileBase64 || "";
       expensesStore.addExpense(newExpense.value);
 

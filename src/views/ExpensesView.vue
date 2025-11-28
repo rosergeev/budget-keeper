@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="header">Expenses</div>
+    <div class="breadcrumb">
+      <BreadcrumbList />
+    </div>
     <ExpenseNavBar class="nav" />
     <div class="list" @click="onListClick">
       <ExpenseList :items="childrenExpenses" />
@@ -15,6 +17,7 @@
 import ExpenseList from "@/components/ExpenseList.vue";
 import ExpenseListItemDetails from "@/components/ExpenseListItemDetails.vue";
 import ExpenseNavBar from "@/components/ExpenseNavBar.vue";
+import BreadcrumbList from "@/components/BreadcrumbList.vue";
 import { useExpensesStore } from "@/stores/ExpensesStore";
 import { storeToRefs } from "pinia";
 
@@ -31,20 +34,19 @@ const onListClick = () => {
 .container {
   display: grid;
   grid-template-columns: 3fr 400px;
-  grid-template-rows: 30px 35px 1fr;
+  grid-template-rows: 35px 30px 1fr;
   grid-template-areas:
-    "header header"
     "nav nav"
+    "breadcrumb breadcrumb"
     "list details";
   column-gap: 10px;
   row-gap: 10px;
   height: 100%;
 }
-.header {
-  grid-area: header;
-  border-color: rgb(217, 91, 255);
-  border-style: solid;
-  border-width: 1px;
+.breadcrumb {
+  grid-area: breadcrumb;
+  justify-self: center;
+  align-items: center;
 }
 .nav {
   grid-area: nav;
